@@ -2,6 +2,7 @@ package com.msa.reserve.service;
 
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DuplicateKeyException;
@@ -39,6 +40,14 @@ public class AccountService {
 	    Account account = findByEmail(email);
 	    account.updateAccount(dto);
 	    return account;
+	}
+	
+	public List<Account> getAccounts() {
+		return accountRepository.findAll();
+	}
+	
+	public void deleteAccounts(List<AccountDto.DelReq> dtoList) {
+		accountRepository.deleteAllById((Iterable<? extends Long>) dtoList.stream().map(m -> m.getAccountId()).collect(Collectors.toList()));
 	}
 	
 	

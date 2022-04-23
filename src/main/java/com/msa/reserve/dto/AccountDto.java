@@ -111,4 +111,17 @@ public class AccountDto {
             this.role = account.getRole();
         }
     }
+    
+    @Getter
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    public static class DelReq {
+    	private Long accountId;
+    	
+    	@Builder
+    	public DelReq(long accountId) {
+    		this.accountId = accountId;
+    		
+    	}
+    	
+    }
 }

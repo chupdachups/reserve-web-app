@@ -1,9 +1,15 @@
 package com.msa.reserve.controller;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,8 +20,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.msa.reserve.dto.AccountDto;
 import com.msa.reserve.service.AccountService;
 
+import lombok.extern.slf4j.Slf4j;
+
 @RestController
 @RequestMapping("accounts")
+@Slf4j
 public class AccountController {
 	
 	@Autowired
@@ -37,6 +46,21 @@ public class AccountController {
     @ResponseStatus(value = HttpStatus.OK)
     public AccountDto.Res updateMyAccount(@PathVariable final String email, @RequestBody final AccountDto.UpdateAccountReq dto) {
         return new AccountDto.Res(accountService.updateAccount(email, dto));
+    }
+    
+    @GetMapping
+    @ResponseStatus(value = HttpStatus.OK)
+    public List<AccountDto.Res> getAccounts() {
+    	return accountService.getAccounts().stream()
+    			.map(m -> new AccountDto.Res(m))
+    			.collect(Collectors.toList());
+    }
+    
+    @DeleteMapping
+    @ResponseStatus(value = HttpStatus.OK)
+    public ResponseEntity<?> deleteAccounts(@RequestBody @Valid final List<AccountDto.DelReq> dtoList) {
+    	accountService.deleteAccounts(dtoList);
+    	return ResponseEntity.ok(true);
     }
 
 }
